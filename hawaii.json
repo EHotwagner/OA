@@ -1,0 +1,6 @@
+{
+    "schema": "D:\\Projects\\OA\\ctot-nondef-OpenAtlas-0.2-resolved.json",
+    "output": "./output",
+    "project": "OAAPI",
+    "synchronous": true
+}

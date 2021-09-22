@@ -1,0 +1,3027 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "OpenAtlas API",
+    "description": "A documentation of the OpenAtlas API",
+    "contact": {
+      "name": "Bernhard Koschiček-Krombholz",
+      "email": "bernhard.koschicek-krombholz@oeaw.ac.at"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "0.2"
+  },
+  "servers": [
+    {
+      "url": "https://demo.openatlas.eu",
+      "description": "Demo Server"
+    },
+    {
+      "url": "https://demo-dev.openatlas.eu",
+      "description": "Demo Dev Server"
+    },
+    {
+      "url": "https://connec.acdh.oeaw.ac.at",
+      "description": "Connec Production Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Entities",
+      "description": "Requesting entities through different means."
+    },
+    {
+      "name": "Nodes",
+      "description": "Requesting nodes and subunits"
+    },
+    {
+      "name": "Content",
+      "description": "Requesting content of the OpenAtlas instance."
+    }
+  ],
+  "paths": {
+    "/api/0.2/class/{class_code}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Classes endpoint\r",
+        "description": "Retrieves a json with a list of entities based on their CIDOC CRM class code. The json contains a **result** and **pagination** key. All in OpenAtlas available codes can be found under `https://redmine.craws.net/projects/uni/wiki/OpenAtlas_and_CIDOC_CRM_class_mapping`. The result can also be filtered, ordered and manipulated through different parameters. By default results are orderd alphabetically and 20 entities are shown.",
+        "parameters": [
+          {
+            "name": "class_code",
+            "in": "path",
+            "description": "Need to be a valid CIDOC CRM class code (e.g. E21, E18, E33)",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entities returned per page",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "column",
+            "in": "query",
+            "description": "The result will be sorted by the given column",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "classCode",
+                "name",
+                "description",
+                "created",
+                "modified",
+                "systemClass",
+                "beginFrom",
+                "beginTo",
+                "endFrom",
+                "endTo"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Result will be sorted asc/desc (default column is name)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Specify request with custom SQL filter method. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "description": "List of results start with given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "description": "List of results start with entity after given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "type_id",
+            "in": "query",
+            "description": "The output will be filtered by the type_id. Only entities with this type ids will be display. The relation is in logical OR.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Select to which output format is prefered",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "linked_places",
+                "geojson"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A json with a list of results and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/classes/": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Class Mapping endpoint\r",
+        "description": "Provides a list of all available system classes, their CIDOC CRM mapping, which view they belong, which icon is used and the englisch name",
+        "responses": {
+          "200": {
+            "description": "List of all available system classes",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClassMappingModel"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/code/{code}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Code endpoint\r",
+        "description": "Retrieves a json with a list of entities based on their OpenAtlas categorie. Available categories are **actor**, **event**, **place**, **source**, **reference**, **object**. The result can also be filtered, ordered and manipulated through different parameters. By default results are orderd alphabetically and 20 entities are shown.",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Need to be an OpenAtlas menu item",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "actor",
+                "event",
+                "place",
+                "reference",
+                "source",
+                "object"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entities returned per page",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "column",
+            "in": "query",
+            "description": "The result will be sorted by the given column",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "classCode",
+                "name",
+                "description",
+                "created",
+                "modified",
+                "systemClass",
+                "beginFrom",
+                "beginTo",
+                "endFrom",
+                "endTo"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Result will be sorted asc/desc (default column is name)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Specify request with custom SQL filter method. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "description": "List of results start with given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "description": "List of results start with entity after given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "type_id",
+            "in": "query",
+            "description": "The output will be filtered by the type_id. Only entities with this type ids will be display. The relation is in logical OR.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Select to which output format is prefered",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "linked_places",
+                "geojson"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary with a result dictionary and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/content/": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Content endpoint\r",
+        "description": "Retrieves a json of the content (Intro, Legal Notice, Contact and the size for processed images) from the OpenAtlas instance. The language can be choosen with the **lang** parameter (en or de).",
+        "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Select output language",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "en",
+                "de"
+              ]
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Json of OpenAtlas content (Intro, Legal Notice and Contact)",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/entities_linked_to_entity/{id_}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Linked Entities endpoint\r",
+        "description": "Retrieves a json with a list of entities, which are linked to the entered entity. The result can also be filtered, ordered and manipulated through different parameters. By default results are orderd alphabetically and 20 entities are shown.",
+        "parameters": [
+          {
+            "name": "id_",
+            "in": "path",
+            "description": "ID must be an entity",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entities returned per page",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "column",
+            "in": "query",
+            "description": "The result will be sorted by the given column",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "classCode",
+                "name",
+                "description",
+                "created",
+                "modified",
+                "systemClass",
+                "beginFrom",
+                "beginTo",
+                "endFrom",
+                "endTo"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Result will be sorted asc/desc (default column is name)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Specify request with custom SQL filter method. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "description": "List of results start with given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "description": "List of results start with entity after given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "type_id",
+            "in": "query",
+            "description": "The output will be filtered by the type_id. Only entities with this type ids will be display. The relation is in logical OR.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary with a result dictionary and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/entity/{id_}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Entity endpoint\r",
+        "description": "Retrieves a geojson representations of an entity through the **id**.",
+        "parameters": [
+          {
+            "name": "id_",
+            "in": "path",
+            "description": "Specific entity ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "export",
+            "in": "query",
+            "description": "Select to which format the output is downloaded",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "csv"
+              ]
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Select to which output format is prefered",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "linked_places",
+                "geojson"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A geojson representation of the specified entity",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/geometric_entities/": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Geometries Endpoint\r",
+        "description": "Retrieves a list of all selected geometries in the database in a standard Geojson format. This is implimentended for map usage.",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Only places with geometries will retrieved.",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeometricEntries"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/latest/{latest}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Latest endpoint\r",
+        "description": "Retrieves a json of latest entries made in the OpenAtlas database. The number **latest** represents the amount of entities retrieved. **latest** can be any number between and including 1 and 100. The pagination information is alway `null`",
+        "parameters": [
+          {
+            "name": "latest",
+            "in": "path",
+            "description": "The amount of last enterd entities to be retrieved (Valid numbers between and including 1 and 100)",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Select to which output format is prefered",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "linked_places",
+                "geojson"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A json with a result list and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LatestModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/node_entities/{id_}": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Node endpoint\r",
+        "description": "Retrieves a json list of all entities directly linked to one specific node.",
+        "parameters": [
+          {
+            "name": "id_",
+            "in": "path",
+            "description": "The ID of an entity, which has to be a node",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of node entities linked to the given node",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeAllModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/node_entities_all/{id_}": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Node endpoint\r",
+        "description": "Retrieves a json list of all entities linked to a specific node. This path also include all sub entities.",
+        "parameters": [
+          {
+            "name": "id_",
+            "in": "path",
+            "description": "The ID of an entity, which has to be a node",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of node entities linked to the given node",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeAllModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/node_overview/": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Node endpoint\r",
+        "description": "Retrieves a json list of all types",
+        "parameters": [
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all types",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeOverviewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/overview_count/": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "Overview Count endpoint\r",
+        "responses": {
+          "200": {
+            "description": "Count of all entities",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewCountModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/api/0.2/query/": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Query endpoint\r",
+        "description": "Retrieves a list of Geojson representations by entity id, CIDOC CRM code or menu item",
+        "parameters": [
+          {
+            "name": "entities",
+            "in": "query",
+            "description": "Specific entity ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "classes",
+            "in": "query",
+            "description": "Need to be a entity class code of the CIDOC CRM (e.g. E21, E18, E33). For further information visit https://redmine.craws.net/projects/uni/wiki/OpenAtlas_and_CIDOC_CRM_class_mapping",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "codes",
+            "in": "query",
+            "description": "Need to be an OpenAtlas menu items",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "actor",
+                "event",
+                "place",
+                "reference",
+                "source",
+                "object"
+              ]
+            }
+          },
+          {
+            "name": "system_classes",
+            "in": "query",
+            "description": "Need to be an OpenAtlas system class",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "acquisition",
+                "activity",
+                "actor_appellation",
+                "administrative_unit",
+                "appellation",
+                "artifact",
+                "bibliography",
+                "edition",
+                "external_reference",
+                "feature",
+                "file",
+                "find",
+                "group",
+                "human_remains",
+                "move",
+                "object_location",
+                "person",
+                "place",
+                "source",
+                "reference_system",
+                "stratigraphic_unit",
+                "source_translation",
+                "type"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entities returned per page",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "column",
+            "in": "query",
+            "description": "The result will be sorted by the given column",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "classCode",
+                "name",
+                "description",
+                "created",
+                "modified",
+                "systemClass",
+                "beginFrom",
+                "beginTo",
+                "endFrom",
+                "endTo"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Result will be sorted asc/desc (default column is name)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Specify request with custom SQL filter method. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "description": "List of results start with given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "description": "List of results start with entity after given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "type_id",
+            "in": "query",
+            "description": "The output will be filtered by the type_id. Only entities with this type ids will be display. The relation is in logical OR.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Select to which output format is prefered",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "linked_places",
+                "geojson"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary with a result dictionary and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/subunit/{id_}": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Node endpoint\r",
+        "description": "Todo",
+        "parameters": [
+          {
+            "name": "id_",
+            "in": "path",
+            "description": "The ID of an entity, which has to be a node",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of node entities linked to the given node",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeAllModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/subunit_hierarchy/{id_}": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Node endpoint\r",
+        "description": "Todo",
+        "parameters": [
+          {
+            "name": "id_",
+            "in": "path",
+            "description": "The ID of an entity, which has to be a node",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of node entities linked to the given node",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NodeAllModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/system_class/{system_class}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "System Class endpoint\r",
+        "description": "Retrieves a json with a list of entities based on their OpenAtlas system class. Available categories are **acquisition**, **activity**, **actor_appellation**, **administrative_unit**, **appellation**, **artifact**, **bibliography**, **edition**, **external_reference**, **feature**, **file**, **find**, **group**, **human_remains**, **move**, **object_location**, **person**, **place**, **source**, **reference_system**, **stratigraphic_unit**, **source_translation**, **type**,  The result can also be filtered, ordered and manipulated through different parameters.  By default results are orderd alphabetically and 20 entities are shown.",
+        "parameters": [
+          {
+            "name": "system_class",
+            "in": "path",
+            "description": "Need to be an OpenAtlas system class",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "acquisition",
+                "activity",
+                "actor_appellation",
+                "administrative_unit",
+                "appellation",
+                "artifact",
+                "bibliography",
+                "edition",
+                "external_reference",
+                "feature",
+                "file",
+                "find",
+                "group",
+                "human_remains",
+                "move",
+                "object_location",
+                "person",
+                "place",
+                "source",
+                "reference_system",
+                "stratigraphic_unit",
+                "source_translation",
+                "type"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entities returned per page",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "column",
+            "in": "query",
+            "description": "The result will be sorted by the given column",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "classCode",
+                "name",
+                "description",
+                "created",
+                "modified",
+                "systemClass",
+                "beginFrom",
+                "beginTo",
+                "endFrom",
+                "endTo"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Result will be sorted asc/desc (default column is name)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Specify request with custom SQL filter method. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "description": "List of results start with given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "description": "List of results start with entity after given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Select to which output format is prefered",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "linked_places",
+                "geojson"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary with a result dictionary and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/system_class_count/": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "summary": "System Class Count endpoint\r",
+        "responses": {
+          "200": {
+            "description": "Count of all entities",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemClassCountModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/type_entities/{id_}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Type Entities Endpoint\r",
+        "description": "Retrieves a json with a list of entities based on their OpenAtlas type. A possible *id* can be obtained by the *type_tree* or *node_overview* endpoint. The result can also be filtered, ordered and manipulated through different parameters. By default results are orderd alphabetically and 20 entities are shown.",
+        "parameters": [
+          {
+            "name": "id_",
+            "in": "path",
+            "description": "Has to be a OpenAtlas type",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entities returned per page",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "column",
+            "in": "query",
+            "description": "The result will be sorted by the given column",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "classCode",
+                "name",
+                "description",
+                "created",
+                "modified",
+                "systemClass",
+                "beginFrom",
+                "beginTo",
+                "endFrom",
+                "endTo"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Result will be sorted asc/desc (default column is name)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Specify request with custom SQL filter method. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "description": "List of results start with given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "description": "List of results start with entity after given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "type_id",
+            "in": "query",
+            "description": "The output will be filtered by the type_id. Only entities with this type ids will be display. The relation is in logical OR.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Select to which output format is prefered",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "linked_places",
+                "geojson"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary with a result dictionary and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/type_entities_all/{id_}": {
+      "get": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Type Entities All Endpoint\r",
+        "description": "Retrieves a json with a list of entities based on their OpenAtlas type. This endpoint also includes all entities, which are connected to an subtype. A possible *id* can be obtained by the *type_tree* or *node_overview* endpoint. The result can also be filtered, ordered and manipulated through different parameters. By default results are orderd alphabetically and 20 entities are shown.",
+        "parameters": [
+          {
+            "name": "id_",
+            "in": "path",
+            "description": "Has to be a OpenAtlas type",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of entities returned per page",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "column",
+            "in": "query",
+            "description": "The result will be sorted by the given column",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "classCode",
+                "name",
+                "description",
+                "created",
+                "modified",
+                "systemClass",
+                "beginFrom",
+                "beginTo",
+                "endFrom",
+                "endTo"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Result will be sorted asc/desc (default column is name)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Specify request with custom SQL filter method. ",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "description": "List of results start with given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "last",
+            "in": "query",
+            "description": "List of results start with entity after given ID",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "show",
+            "in": "query",
+            "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "when",
+                "types",
+                "relations",
+                "names",
+                "links",
+                "geometry",
+                "depictions",
+                "not"
+              ]
+            }
+          },
+          {
+            "name": "type_id",
+            "in": "query",
+            "description": "The output will be filtered by the type_id. Only entities with this type ids will be display. The relation is in logical OR.",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Returns a number which represents the total count of the result",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Select to which output format is prefered",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "linked_places",
+                "geojson"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A dictionary with a result dictionary and pagination information",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TypeTreeModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    },
+    "/api/0.2/type_tree/": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "summary": "Type Tree endpoint\r",
+        "description": "Shows every *Type* in the OA instance, with its root and subs, so a tree can be build",
+        "parameters": [
+          {
+            "name": "download",
+            "in": "query",
+            "description": "Triggers the file download of the given request",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all *Types*",
+            "content": {
+              "application/ld+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TypeTreeModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Something went wrong. Please consult the error message."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClassMappingModel": {
+        "type": "object",
+        "properties": {
+          "crmClass": {
+            "type": "string"
+          },
+          "en": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "systemClass": {
+            "type": "string"
+          },
+          "view": {
+            "type": "string"
+          }
+        }
+      },
+      "ContentModel": {
+        "type": "object",
+        "properties": {
+          "contact": {
+            "type": "string"
+          },
+          "imageSized": {
+            "$ref": "#/components/schemas/ContentModel_imageSized"
+          },
+          "intro": {
+            "type": "string"
+          },
+          "legalNotice": {
+            "type": "string"
+          },
+          "siteName": {
+            "type": "string"
+          }
+        }
+      },
+      "DepictionModel": {
+        "type": "object",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "DescriptionModel": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "FeatureGeoJSON": {
+        "required": [
+          "@id",
+          "geometry",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "crmClass": {
+            "type": "string"
+          },
+          "depictions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DepictionModel"
+            }
+          },
+          "description": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DescriptionModel"
+            }
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkModel"
+            }
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamesModel"
+            }
+          },
+          "properties": {
+            "$ref": "#/components/schemas/FeatureGeoJSON_properties"
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelationModel"
+            }
+          },
+          "systemClass": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeModel"
+            }
+          },
+          "when": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhenModel"
+            }
+          }
+        }
+      },
+      "GeometricEntries": {
+        "type": "object",
+        "properties": {
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeometricEntry"
+            }
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GeometricEntry": {
+        "type": "object",
+        "properties": {
+          "geometry": {
+            "$ref": "#/components/schemas/GeometricEntry_geometry"
+          },
+          "properties": {
+            "$ref": "#/components/schemas/GeometricEntry_properties"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "Geometries": {
+        "type": "object",
+        "properties": {
+          "geometry": {
+            "$ref": "#/components/schemas/GeometricEntry_geometry"
+          },
+          "properties": {
+            "$ref": "#/components/schemas/Geometries_properties"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GeometryModel": {
+        "type": "object",
+        "properties": {
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Geometries"
+            }
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "LatestModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/LinkedPlaceModel"
+        }
+      },
+      "LinkModel": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "referenceSystem": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "LinkedPlaceModel": {
+        "required": [
+          "features",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "@context": {
+            "type": "string"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureGeoJSON"
+            }
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "NamesModel": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "type": "string"
+          }
+        }
+      },
+      "NodeAllModel": {
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NodeModel"
+            }
+          }
+        }
+      },
+      "NodeCategoryModel": {
+        "type": "object",
+        "properties": {
+          "custom": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "places": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "standard": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NodeModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "NodeOverviewModel": {
+        "type": "object",
+        "properties": {
+          "types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NodeCategoryModel"
+            }
+          }
+        }
+      },
+      "OutputModelGeojson": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationModel"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeometryModel"
+            }
+          }
+        }
+      },
+      "OutputModelLPF": {
+        "type": "object",
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationModel"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkedPlaceModel"
+            }
+          }
+        }
+      },
+      "OverviewCountModel": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "systemClass": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginationIndexModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number"
+          },
+          "startId": {
+            "type": "number"
+          }
+        }
+      },
+      "PaginationModel": {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "type": "number"
+          },
+          "entitiesPerPage": {
+            "type": "number"
+          },
+          "index": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaginationIndexModel"
+            }
+          },
+          "totalPages": {
+            "type": "number"
+          }
+        }
+      },
+      "RelationModel": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "relationTo": {
+            "type": "string"
+          },
+          "relationType": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "when": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WhenModel"
+            }
+          }
+        }
+      },
+      "SystemClassCountModel": {
+        "type": "object",
+        "properties": {
+          "acquisition": {
+            "type": "number"
+          },
+          "activity": {
+            "type": "number"
+          },
+          "administrative_unit": {
+            "type": "number"
+          },
+          "artifact": {
+            "type": "number"
+          },
+          "bibliography": {
+            "type": "number"
+          },
+          "edition": {
+            "type": "number"
+          },
+          "feature": {
+            "type": "number"
+          },
+          "file": {
+            "type": "number"
+          },
+          "group": {
+            "type": "number"
+          },
+          "move": {
+            "type": "number"
+          },
+          "person": {
+            "type": "number"
+          },
+          "place": {
+            "type": "number"
+          },
+          "reference_system": {
+            "type": "number"
+          },
+          "source": {
+            "type": "number"
+          },
+          "source_translation": {
+            "type": "number"
+          },
+          "stratigraphic_unit": {
+            "type": "number"
+          },
+          "type": {
+            "type": "number"
+          }
+        }
+      },
+      "TimeDetailModel": {
+        "type": "object",
+        "properties": {
+          "earliest": {
+            "type": "string"
+          },
+          "latest": {
+            "type": "string"
+          }
+        }
+      },
+      "TimespansModel": {
+        "type": "object",
+        "properties": {
+          "end": {
+            "$ref": "#/components/schemas/TimeDetailModel"
+          },
+          "first": {
+            "$ref": "#/components/schemas/TimeDetailModel"
+          }
+        }
+      },
+      "TypeModel": {
+        "type": "object",
+        "properties": {
+          "hierarchy": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "TypeTreeModel": {
+        "type": "object",
+        "properties": {
+          "type_tree": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeTreeSubModel"
+            }
+          }
+        }
+      },
+      "TypeTreeSubModel": {
+        "type": "object",
+        "properties": {
+          "Type_IDs": {
+            "$ref": "#/components/schemas/TypeTreeSubModel_Type_IDs"
+          }
+        }
+      },
+      "WhenModel": {
+        "type": "object",
+        "properties": {
+          "timespans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimespansModel"
+            }
+          }
+        }
+      },
+      "inline_response_200": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OutputModelLPF"
+          },
+          {
+            "$ref": "#/components/schemas/OutputModelGeojson"
+          }
+        ]
+      },
+      "inline_response_200_1": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/LinkedPlaceModel"
+          },
+          {
+            "$ref": "#/components/schemas/GeometryModel"
+          }
+        ]
+      },
+      "ContentModel_imageSized": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          }
+        }
+      },
+      "FeatureGeoJSON_properties": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "GeometricEntry_geometry": {
+        "type": "object",
+        "properties": {
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GeometricEntry_properties": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "objectDescription": {
+            "type": "string"
+          },
+          "objectId": {
+            "type": "integer"
+          },
+          "objectName": {
+            "type": "string"
+          },
+          "objectType": {
+            "type": "string"
+          },
+          "shapeType": {
+            "type": "string"
+          }
+        }
+      },
+      "Geometries_properties_place_types": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Geometries_properties_place": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Geometries_properties_place_types"
+            }
+          }
+        }
+      },
+      "Geometries_properties": {
+        "type": "object",
+        "properties": {
+          "begin_from": {
+            "type": "string"
+          },
+          "begin_to": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "end_from": {
+            "type": "string"
+          },
+          "end_to": {
+            "type": "string"
+          },
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "place": {
+            "$ref": "#/components/schemas/Geometries_properties_place"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "TypeTreeSubModel_Type_IDs": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "count_subs": {
+            "type": "integer"
+          },
+          "description": {
+            "type": "string"
+          },
+          "first": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "last": {
+            "type": "integer"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "origin_id": {
+            "type": "integer"
+          },
+          "root": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "standard": {
+            "type": "boolean"
+          },
+          "subs": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "columnParam": {
+        "name": "column",
+        "in": "query",
+        "description": "The result will be sorted by the given column",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "id",
+            "classCode",
+            "name",
+            "description",
+            "created",
+            "modified",
+            "systemClass",
+            "beginFrom",
+            "beginTo",
+            "endFrom",
+            "endTo"
+          ]
+        }
+      },
+      "countParam": {
+        "name": "count",
+        "in": "query",
+        "description": "Returns a number which represents the total count of the result",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "downloadParam": {
+        "name": "download",
+        "in": "query",
+        "description": "Triggers the file download of the given request",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "exportParam": {
+        "name": "export",
+        "in": "query",
+        "description": "Select to which format the output is downloaded",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "csv"
+          ]
+        }
+      },
+      "filterParam": {
+        "name": "filter",
+        "in": "query",
+        "description": "Specify request with custom SQL filter method. ",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "firstParam": {
+        "name": "first",
+        "in": "query",
+        "description": "List of results start with given ID",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "number"
+        }
+      },
+      "formatParam": {
+        "name": "format",
+        "in": "query",
+        "description": "Select to which output format is prefered",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "linked_places",
+            "geojson"
+          ]
+        }
+      },
+      "geometryParam": {
+        "name": "geometry",
+        "in": "query",
+        "description": "Select geometry types.",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "gisAll",
+            "gisPointAll",
+            "gisPointSupers",
+            "gisPointSubs",
+            "gisPointSibling",
+            "gisLineAll",
+            "gisPolygonAll"
+          ]
+        }
+      },
+      "langParam": {
+        "name": "language",
+        "in": "query",
+        "description": "Select output language",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "en",
+            "de"
+          ]
+        }
+      },
+      "lastParam": {
+        "name": "last",
+        "in": "query",
+        "description": "List of results start with entity after given ID",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "number"
+        }
+      },
+      "limitParam": {
+        "name": "limit",
+        "in": "query",
+        "description": "Number of entities returned per page",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "number"
+        }
+      },
+      "showParam": {
+        "name": "show",
+        "in": "query",
+        "description": "Select which key should be shown. If 'not' is used, no other keys will be shown",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "when",
+            "types",
+            "relations",
+            "names",
+            "links",
+            "geometry",
+            "depictions",
+            "not"
+          ]
+        }
+      },
+      "sortParam": {
+        "name": "sort",
+        "in": "query",
+        "description": "Result will be sorted asc/desc (default column is name)",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        }
+      },
+      "typeParam": {
+        "name": "type_id",
+        "in": "query",
+        "description": "The output will be filtered by the type_id. Only entities with this type ids will be display. The relation is in logical OR.",
+        "required": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

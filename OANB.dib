@@ -1,0 +1,54 @@
+#!fsharp
+
+#r "nuget: Plotly.NET, 2.0.0-preview.8"
+#r "nuget: Plotly.NET.Interactive, 2.0.0-preview.8"
+#r "nuget: Microsoft.DotNet.Interactive.ExtensionLab, 1.0.0-beta.21459.1"
+#r "nuget: Newtonsoft.Json, 13.0.1"
+#r "nuget: Fable.Remoting.Json, 2.18.0.0"
+
+#!fsharp
+
+#r "output\\bin\\Debug\\netstandard2.0\\OAAPI.dll"
+
+#!fsharp
+
+open System
+open System.Net.Http
+open OAAPI
+open OAAPI.Types
+let uri = Uri "https://demo.openatlas.eu"
+let httpClient = new HttpClient(BaseAddress= uri)
+let oaClient = OAAPIClient(httpClient)
+
+#!markdown
+
+Misc:
+* Path in hawaii.json is hardcoded.
+* Dictionaries are not typed like: https://swagger.io/docs/specification/data-models/dictionaries/
+* F# client is generated with: https://github.com/Zaid-Ajaj/Hawaii
+* Many arrays are not typed as such.
+* Some methods dont have return values in the generated client. Could be a hawaii bug (has occured before) or maybe confused by wrong types? Dunno. hawaii bug more likely.
+
+#!fsharp
+
+oaClient.GetApi02NodeEntitiesAllById 10.
+
+#!fsharp
+
+oaClient.GetApi02TypeEntitiesAllById 10.
+
+#!fsharp
+
+oaClient.GetApi02TypeTree()
+
+#!fsharp
+
+oaClient.GetApi02SubunitById 10.
+
+#!markdown
+
+Is not typed as an Array.
+
+#!fsharp
+
+oaClient.GetApi02NodeOverview()

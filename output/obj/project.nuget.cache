@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "OjGp5+R+QP4sUAFyIORhmXQJvAICdNcimywHhUvtNjgd73pMsgw8QnroV+pc41jGk23/tYxuuzAuR6q1ZkM7xw==",
+  "success": true,
+  "projectFilePath": "D:\\Projects\\Notebooks\\OA\\output\\OAAPI.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ehotw\\.nuget\\packages\\fable.remoting.json\\2.18.0\\fable.remoting.json.2.18.0.nupkg.sha512",
+    "C:\\Users\\ehotw\\.nuget\\packages\\fsharp.core\\5.0.0\\fsharp.core.5.0.0.nupkg.sha512",
+    "C:\\Users\\ehotw\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\ehotw\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\ehotw\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
