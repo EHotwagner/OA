@@ -1,8 +1,8 @@
-D:\Projects\Notebooks\OA\output\bin\Debug\netstandard2.0\OAAPI.deps.json
-D:\Projects\Notebooks\OA\output\bin\Debug\netstandard2.0\OAAPI.dll
-D:\Projects\Notebooks\OA\output\bin\Debug\netstandard2.0\OAAPI.pdb
-D:\Projects\Notebooks\OA\output\obj\Debug\netstandard2.0\OAAPI.fsproj.AssemblyReference.cache
-D:\Projects\Notebooks\OA\output\obj\Debug\netstandard2.0\OAAPI.AssemblyInfoInputs.cache
-D:\Projects\Notebooks\OA\output\obj\Debug\netstandard2.0\OAAPI.AssemblyInfo.fs
-D:\Projects\Notebooks\OA\output\obj\Debug\netstandard2.0\OAAPI.dll
-D:\Projects\Notebooks\OA\output\obj\Debug\netstandard2.0\OAAPI.pdb
+D:\Projects\OA\output\bin\Debug\netstandard2.0\OAAPI.deps.json
+D:\Projects\OA\output\bin\Debug\netstandard2.0\OAAPI.dll
+D:\Projects\OA\output\bin\Debug\netstandard2.0\OAAPI.pdb
+D:\Projects\OA\output\obj\Debug\netstandard2.0\OAAPI.fsproj.AssemblyReference.cache
+D:\Projects\OA\output\obj\Debug\netstandard2.0\OAAPI.AssemblyInfoInputs.cache
+D:\Projects\OA\output\obj\Debug\netstandard2.0\OAAPI.AssemblyInfo.fs
+D:\Projects\OA\output\obj\Debug\netstandard2.0\OAAPI.dll
+D:\Projects\OA\output\obj\Debug\netstandard2.0\OAAPI.pdb

@@ -13,13 +13,10 @@
     <SourceRoot Include="C:\Users\ehotw\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
-  <PropertyGroup>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgNewtonsoft_Json Condition=" '$(PkgNewtonsoft_Json)' == '' ">C:\Users\ehotw\.nuget\packages\newtonsoft.json\13.0.1</PkgNewtonsoft_Json>
     <PkgNETStandard_Library Condition=" '$(PkgNETStandard_Library)' == '' ">C:\Users\ehotw\.nuget\packages\netstandard.library\2.0.3</PkgNETStandard_Library>
-    <PkgFSharp_Core Condition=" '$(PkgFSharp_Core)' == '' ">C:\Users\ehotw\.nuget\packages\fsharp.core\5.0.0</PkgFSharp_Core>
+    <PkgFSharp_Core Condition=" '$(PkgFSharp_Core)' == '' ">C:\Users\ehotw\.nuget\packages\fsharp.core\6.0.1</PkgFSharp_Core>
     <PkgFable_Remoting_Json Condition=" '$(PkgFable_Remoting_Json)' == '' ">C:\Users\ehotw\.nuget\packages\fable.remoting.json\2.18.0</PkgFable_Remoting_Json>
   </PropertyGroup>
 </Project>

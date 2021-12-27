@@ -11,7 +11,7 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.2"
+    "version": "0.3"
   },
   "servers": [
     {
@@ -1401,7 +1401,8 @@
           "404": {
             "description": "Something went wrong. Please consult the error message."
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/0.2/subunit_hierarchy/{id_}": {
@@ -1460,7 +1461,8 @@
           "404": {
             "description": "Something went wrong. Please consult the error message."
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/0.2/system_class/{system_class}": {

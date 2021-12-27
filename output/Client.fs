@@ -438,50 +438,6 @@ type OAAPIClient(httpClient: HttpClient) =
             GetApi02Query.NotFound
 
     ///<summary>
-    ///Todo
-    ///</summary>
-    ///<param name="id">The ID of an entity, which has to be a node</param>
-    ///<param name="count">Returns a number which represents the total count of the result</param>
-    ///<param name="download">Triggers the file download of the given request</param>
-    member this.GetApi02SubunitById(id: float, ?count: bool, ?download: bool) =
-        let requestParts =
-            [ RequestPart.path ("id_", id)
-              if count.IsSome then
-                  RequestPart.query ("count", count.Value)
-              if download.IsSome then
-                  RequestPart.query ("download", download.Value) ]
-
-        let (status, content) =
-            OpenApiHttp.get httpClient "/api/0.2/subunit/{id_}" requestParts
-
-        if status = HttpStatusCode.OK then
-            GetApi02SubunitById.OK(Serializer.deserialize content)
-        else
-            GetApi02SubunitById.NotFound
-
-    ///<summary>
-    ///Todo
-    ///</summary>
-    ///<param name="id">The ID of an entity, which has to be a node</param>
-    ///<param name="count">Returns a number which represents the total count of the result</param>
-    ///<param name="download">Triggers the file download of the given request</param>
-    member this.GetApi02SubunitHierarchyById(id: float, ?count: bool, ?download: bool) =
-        let requestParts =
-            [ RequestPart.path ("id_", id)
-              if count.IsSome then
-                  RequestPart.query ("count", count.Value)
-              if download.IsSome then
-                  RequestPart.query ("download", download.Value) ]
-
-        let (status, content) =
-            OpenApiHttp.get httpClient "/api/0.2/subunit_hierarchy/{id_}" requestParts
-
-        if status = HttpStatusCode.OK then
-            GetApi02SubunitHierarchyById.OK(Serializer.deserialize content)
-        else
-            GetApi02SubunitHierarchyById.NotFound
-
-    ///<summary>
     ///Retrieves a json with a list of entities based on their OpenAtlas system class. Available categories are **acquisition**, **activity**, **actor_appellation**, **administrative_unit**, **appellation**, **artifact**, **bibliography**, **edition**, **external_reference**, **feature**, **file**, **find**, **group**, **human_remains**, **move**, **object_location**, **person**, **place**, **source**, **reference_system**, **stratigraphic_unit**, **source_translation**, **type**,  The result can also be filtered, ordered and manipulated through different parameters.  By default results are orderd alphabetically and 20 entities are shown.
     ///</summary>
     ///<param name="systemClass">Need to be an OpenAtlas system class</param>
